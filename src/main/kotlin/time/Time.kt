@@ -4,102 +4,31 @@ package time
  * Created by Kizito Nwose on 14/10/2017
  */
 
-//region Float
-val Float.seconds: Interval<Second>
+//region Number
+val Number.seconds: Interval<Second>
     get() = Interval(this.toDouble())
 
-val Float.minutes: Interval<Minute>
+val Number.minutes: Interval<Minute>
     get() = Interval(this.toDouble())
 
-val Float.milliseconds: Interval<Millisecond>
+val Number.milliseconds: Interval<Millisecond>
     get() = Interval(this.toDouble())
 
-val Float.microseconds: Interval<Microsecond>
+val Number.microseconds: Interval<Microsecond>
     get() = Interval(this.toDouble())
 
-val Float.nanoseconds: Interval<Nanosecond>
+val Number.nanoseconds: Interval<Nanosecond>
     get() = Interval(this.toDouble())
 
-val Float.hours: Interval<Hour>
+val Number.hours: Interval<Hour>
     get() = Interval(this.toDouble())
 
-val Float.days: Interval<Day>
-    get() = Interval(this.toDouble())
-//endregion
-
-
-//region Double
-val Double.seconds: Interval<Second>
-    get() = Interval(this)
-
-val Double.minutes: Interval<Minute>
-    get() = Interval(this)
-
-val Double.milliseconds: Interval<Millisecond>
-    get() = Interval(this)
-
-val Double.microseconds: Interval<Microsecond>
-    get() = Interval(this)
-
-val Double.nanoseconds: Interval<Nanosecond>
-    get() = Interval(this)
-
-val Double.hours: Interval<Hour>
-    get() = Interval(this)
-
-val Double.days: Interval<Day>
-    get() = Interval(this)
-//endregion
-
-
-//region Int
-val Int.seconds: Interval<Second>
-    get() = Interval(this.toDouble())
-
-val Int.minutes: Interval<Minute>
-    get() = Interval(this.toDouble())
-
-val Int.milliseconds: Interval<Millisecond>
-    get() = Interval(this.toDouble())
-
-val Int.microseconds: Interval<Microsecond>
-    get() = Interval(this.toDouble())
-
-val Int.nanoseconds: Interval<Nanosecond>
-    get() = Interval(this.toDouble())
-
-val Int.hours: Interval<Hour>
-    get() = Interval(this.toDouble())
-
-val Int.days: Interval<Day>
+val Number.days: Interval<Day>
     get() = Interval(this.toDouble())
 //endregion
 
 
-//region Long
-val Long.seconds: Interval<Second>
-    get() = Interval(this.toDouble())
-
-val Long.minutes: Interval<Minute>
-    get() = Interval(this.toDouble())
-
-val Long.milliseconds: Interval<Millisecond>
-    get() = Interval(this.toDouble())
-
-val Long.microseconds: Interval<Microsecond>
-    get() = Interval(this.toDouble())
-
-val Long.nanoseconds: Interval<Nanosecond>
-    get() = Interval(this.toDouble())
-
-val Long.hours: Interval<Hour>
-    get() = Interval(this.toDouble())
-
-val Long.days: Interval<Day>
-    get() = Interval(this.toDouble())
-//endregion
-
-class Interval<out T : TimeUnit>(val value: Double, private val factory: () -> T) {
+class Interval<out T : TimeUnit>(val value: Double , val factory: () -> T) {
 
     val inSeconds: Interval<Second>
         get() = converted()
@@ -122,15 +51,35 @@ class Interval<out T : TimeUnit>(val value: Double, private val factory: () -> T
     val inDays: Interval<Day>
         get() = converted()
 
-    private inline fun <reified OtherUnit : TimeUnit> converted(): Interval<OtherUnit> {
+    inline fun <reified OtherUnit : TimeUnit> converted(): Interval<OtherUnit> {
         val otherInstance = OtherUnit::class.java.newInstance()
         return Interval(value * factory().conversionRate(otherInstance))
     }
-
+//    inline fun <reified OtherUnit : TimeUnit> converted(otherTimeUnit: OtherUnit): Interval<OtherUnit> {
+//        return Interval(value * factory().conversionRate(otherTimeUnit))
+//    }
     companion object {
         inline operator fun <reified K : TimeUnit> invoke(value: Double) = Interval(value) {
             K::class.java.newInstance()
         }
+    }
+
+    operator fun plus(other: Interval<TimeUnit>): Interval<T> {
+        val newValue = value + other.value * other.factory().conversionRate(factory())
+        return Interval(newValue){return@Interval factory()}
+    }
+
+    operator fun minus(other: Interval<TimeUnit>): Interval<T> {
+        val newValue = value - other.value * other.factory().conversionRate(factory())
+        return Interval(newValue){return@Interval factory()}
+    }
+
+    operator fun times(other: Number): Interval<T> {
+        return Interval(value * other.toDouble()){return@Interval factory()}
+    }
+
+    operator fun div(other: Number): Interval<T> {
+        return Interval(value / other.toDouble()){return@Interval factory()}
     }
 }
 
@@ -168,3 +117,4 @@ class Microsecond : TimeUnit {
 class Nanosecond : TimeUnit {
     override val timeIntervalRatio = 1e-9
 }
+
