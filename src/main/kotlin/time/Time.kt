@@ -4,36 +4,27 @@ package time
  * Created by Kizito Nwose on 14/10/2017
  */
 
-//region Number
-val Number.seconds: Interval<Second>
-    get() = Interval(this.toDouble())
 
-val Number.minutes: Interval<Minute>
-    get() = Interval(this.toDouble())
-
-val Number.milliseconds: Interval<Millisecond>
-    get() = Interval(this.toDouble())
-
-val Number.microseconds: Interval<Microsecond>
-    get() = Interval(this.toDouble())
-
-val Number.nanoseconds: Interval<Nanosecond>
-    get() = Interval(this.toDouble())
-
-val Number.hours: Interval<Hour>
-    get() = Interval(this.toDouble())
-
-val Number.days: Interval<Day>
-    get() = Interval(this.toDouble())
-//endregion
+interface TimeUnit {
+    val timeIntervalRatio: Double
+    fun <OtherUnit : TimeUnit> conversionRate(otherTimeUnit: OtherUnit): Double {
+        return timeIntervalRatio / otherTimeUnit.timeIntervalRatio
+    }
+}
 
 
-class Interval<out T : TimeUnit>(val value: Double , val factory: () -> T) {
+class Interval<out T : TimeUnit>(val value: Double, val factory: () -> T) {
 
-    val inSeconds: Interval<Second>
+    val inDays: Interval<Day>
+        get() = converted()
+
+    val inHours: Interval<Hour>
         get() = converted()
 
     val inMinutes: Interval<Minute>
+        get() = converted()
+
+    val inSeconds: Interval<Second>
         get() = converted()
 
     val inMilliseconds: Interval<Millisecond>
@@ -45,19 +36,12 @@ class Interval<out T : TimeUnit>(val value: Double , val factory: () -> T) {
     val inNanoseconds: Interval<Nanosecond>
         get() = converted()
 
-    val inHours: Interval<Hour>
-        get() = converted()
-
-    val inDays: Interval<Day>
-        get() = converted()
 
     inline fun <reified OtherUnit : TimeUnit> converted(): Interval<OtherUnit> {
         val otherInstance = OtherUnit::class.java.newInstance()
         return Interval(value * factory().conversionRate(otherInstance))
     }
-//    inline fun <reified OtherUnit : TimeUnit> converted(otherTimeUnit: OtherUnit): Interval<OtherUnit> {
-//        return Interval(value * factory().conversionRate(otherTimeUnit))
-//    }
+
     companion object {
         inline operator fun <reified K : TimeUnit> invoke(value: Double) = Interval(value) {
             K::class.java.newInstance()
@@ -66,29 +50,40 @@ class Interval<out T : TimeUnit>(val value: Double , val factory: () -> T) {
 
     operator fun plus(other: Interval<TimeUnit>): Interval<T> {
         val newValue = value + other.value * other.factory().conversionRate(factory())
-        return Interval(newValue){return@Interval factory()}
+        return Interval(newValue) { return@Interval factory() }
     }
 
     operator fun minus(other: Interval<TimeUnit>): Interval<T> {
         val newValue = value - other.value * other.factory().conversionRate(factory())
-        return Interval(newValue){return@Interval factory()}
+        return Interval(newValue) { return@Interval factory() }
     }
 
     operator fun times(other: Number): Interval<T> {
-        return Interval(value * other.toDouble()){return@Interval factory()}
+        return Interval(value * other.toDouble()) { return@Interval factory() }
     }
 
     operator fun div(other: Number): Interval<T> {
-        return Interval(value / other.toDouble()){return@Interval factory()}
+        return Interval(value / other.toDouble()) { return@Interval factory() }
     }
+
+    operator fun inc() = Interval(value + 1, { factory() })
+
+    operator fun dec() = Interval(value - 1, { factory() })
+
+    operator fun compareTo(other: Interval<TimeUnit>)
+            = inMilliseconds.value.compareTo(other.inMilliseconds.value)
+
+    operator fun contains(other: Interval<TimeUnit>)
+            = inMilliseconds.value >= other.inMilliseconds.value
+
+    override operator fun equals(other: Any?): Boolean {
+        if (other == null || other !is Interval<TimeUnit>) return false
+        return compareTo(other) == 0
+    }
+
+    override fun hashCode() = inMilliseconds.value.hashCode()
 }
 
-interface TimeUnit {
-    val timeIntervalRatio: Double
-    fun <OtherUnit : TimeUnit> conversionRate(otherTimeUnit: OtherUnit): Double {
-        return timeIntervalRatio / otherTimeUnit.timeIntervalRatio
-    }
-}
 
 class Day : TimeUnit {
     override val timeIntervalRatio = 86400.0
@@ -111,10 +106,34 @@ class Millisecond : TimeUnit {
 }
 
 class Microsecond : TimeUnit {
-    override val timeIntervalRatio =  0.000001
+    override val timeIntervalRatio = 0.000001
 }
 
 class Nanosecond : TimeUnit {
     override val timeIntervalRatio = 1e-9
 }
+
+
+val Number.days: Interval<Day>
+    get() = Interval(this.toDouble())
+
+val Number.hours: Interval<Hour>
+    get() = Interval(this.toDouble())
+
+val Number.minutes: Interval<Minute>
+    get() = Interval(this.toDouble())
+
+val Number.seconds: Interval<Second>
+    get() = Interval(this.toDouble())
+
+val Number.milliseconds: Interval<Millisecond>
+    get() = Interval(this.toDouble())
+
+val Number.microseconds: Interval<Microsecond>
+    get() = Interval(this.toDouble())
+
+val Number.nanoseconds: Interval<Nanosecond>
+    get() = Interval(this.toDouble())
+
+
 
