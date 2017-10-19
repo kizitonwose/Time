@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.kizitonwose'
 
@@ -30,9 +30,6 @@ android {
     }
 }
 
-repositories {
-    jcenter()
-}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
