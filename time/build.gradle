@@ -4,7 +4,7 @@ apply plugin: 'maven'
 group = 'com.github.kizitonwose'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
