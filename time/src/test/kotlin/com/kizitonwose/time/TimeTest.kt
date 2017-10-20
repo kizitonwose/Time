@@ -1,8 +1,9 @@
-package time
+package com.kizitonwose.time
 
+import com.kizitonwose.time.*
 import org.hamcrest.core.IsEqual.equalTo
-import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Test
 import java.util.*
 
 /**

@@ -1,4 +1,4 @@
-package time
+package com.kizitonwose.time
 
 import java.util.*
 import kotlin.concurrent.schedule

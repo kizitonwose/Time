@@ -1,4 +1,4 @@
-package time
+package com.kizitonwose.time
 
 /**
  * Created by Kizito Nwose on 14/10/2017
