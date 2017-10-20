@@ -1,6 +1,5 @@
 package com.kizitonwose.time
 
-import com.kizitonwose.time.*
 import org.hamcrest.core.IsEqual.equalTo
 import org.junit.Assert.*
 import org.junit.Test
