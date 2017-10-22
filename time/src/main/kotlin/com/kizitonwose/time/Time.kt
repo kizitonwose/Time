@@ -36,6 +36,7 @@ class Interval<out T : TimeUnit>(val value: Double, val factory: () -> T) {
     val inNanoseconds: Interval<Nanosecond>
         get() = converted()
 
+    val longValue = Math.round(value)
 
     inline fun <reified OtherUnit : TimeUnit> converted(): Interval<OtherUnit> {
         val otherInstance = OtherUnit::class.java.newInstance()

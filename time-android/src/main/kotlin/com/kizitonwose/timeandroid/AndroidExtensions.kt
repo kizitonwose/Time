@@ -8,8 +8,8 @@ import com.kizitonwose.time.*
  */
 
 fun Handler.postDelayed(r: Runnable, delay: Interval<TimeUnit>)
-        = postDelayed(r, delay.inMilliseconds.value.toLong())
+        = postDelayed(r, delay.inMilliseconds.longValue)
 
 fun Handler.postDelayed(r: () -> Unit, delay: Interval<TimeUnit>)
-        = postDelayed(r, delay.inMilliseconds.value.toLong())
+        = postDelayed(r, delay.inMilliseconds.longValue)
 
