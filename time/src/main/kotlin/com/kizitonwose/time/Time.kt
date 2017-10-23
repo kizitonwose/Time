@@ -51,20 +51,20 @@ class Interval<out T : TimeUnit>(val value: Double, val factory: () -> T) {
 
     operator fun plus(other: Interval<TimeUnit>): Interval<T> {
         val newValue = value + other.value * other.factory().conversionRate(factory())
-        return Interval(newValue) { return@Interval factory() }
+        return Interval(newValue) { factory() }
     }
 
     operator fun minus(other: Interval<TimeUnit>): Interval<T> {
         val newValue = value - other.value * other.factory().conversionRate(factory())
-        return Interval(newValue) { return@Interval factory() }
+        return Interval(newValue) { factory() }
     }
 
     operator fun times(other: Number): Interval<T> {
-        return Interval(value * other.toDouble()) { return@Interval factory() }
+        return Interval(value * other.toDouble()) { factory() }
     }
 
     operator fun div(other: Number): Interval<T> {
-        return Interval(value / other.toDouble()) { return@Interval factory() }
+        return Interval(value / other.toDouble()) { factory() }
     }
 
     operator fun inc() = Interval(value + 1, { factory() })
