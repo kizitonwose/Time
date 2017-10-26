@@ -73,4 +73,25 @@ class TimeTest {
 
         assertTrue(tenDaysAgo < now)
     }
+
+    @Test
+    fun `custom time units work as expected`() {
+        val twoWeeks = 2.weeks
+        val fourteenDays = 14.days
+
+        assertEquals(twoWeeks, fourteenDays)
+        assertEquals(336.hours.inWeeks, twoWeeks)
+    }
 }
+
+
+// Custom time unit.
+class Week : TimeUnit {
+    override val timeIntervalRatio = 604800.0
+}
+
+val Number.weeks: Interval<Week>
+    get() = Interval(this.toDouble())
+
+val Interval<TimeUnit>.inWeeks: Interval<Week>
+    get() = converted()
