@@ -245,7 +245,7 @@ dependencies {
 ```
 
 ## Contributing
-The goal is for the library to be used wherever possible. If there are extension functions or features you think the library should have, feel free to add them and send a pull request or open an issue. Core Kotlin extensions belong in the "[time][time-core-module-url]" modue while Android extensions belong in "[time-android][time-android-module-url]" module. 
+The goal is for the library to be used wherever possible. If there are extension functions or features you think the library should have, feel free to add them and send a pull request or open an issue. Core Kotlin extensions belong in the "[time][time-core-module-url]" module while Android extensions belong in "[time-android][time-android-module-url]" module.
 
 
 ## Inspiration
