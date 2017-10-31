@@ -1,5 +1,11 @@
 # Time
 
+[![JitPack](https://jitpack.io/v/kizitonwose/Time.svg)](https://jitpack.io/#kizitonwose/Time) 
+[![Build Status](https://travis-ci.org/kizitonwose/Time.svg?branch=master)](https://travis-ci.org/kizitonwose/Time) 
+[![Coverage](https://img.shields.io/codecov/c/github/kizitonwose/Time/master.svg)](https://codecov.io/gh/kizitonwose/Time) 
+[![Codacy](https://api.codacy.com/project/badge/Grade/26b009748a0849f3973887fbbcd84900)](https://www.codacy.com/app/kizitonwose/Time) 
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/kizitonwose/Time/blob/master/LICENSE.md) 
+
 This library is made for you if you have ever written something like this: 
 
 ```kotlin
