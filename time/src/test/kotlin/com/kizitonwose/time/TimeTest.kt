@@ -37,7 +37,7 @@ class TimeTest {
         newValue -= 20.seconds
         newValue += 10.seconds
 
-        assertThat(newValue.value, equalTo(170.0))
+        assertThat(newValue, equalTo(170.seconds))
     }
 
     @Test
@@ -48,12 +48,25 @@ class TimeTest {
     }
 
     @Test
-    fun `time operators with numbers work as expected`() {
+    fun `time operators(multiplication and division) work as expected`() {
         val sixtySecs = 60.seconds
 
-        val newValue = sixtySecs * 2
+        val multiplied = sixtySecs * 2
+        val divided = sixtySecs / 2
 
-        assertEquals(newValue, 120.seconds)
+        assertEquals(multiplied, 120.seconds)
+        assertEquals(divided, 30.seconds)
+    }
+
+    @Test
+    fun `time operators(increment and decrement) work as expected`() {
+        var days = 2.days
+
+        days++
+        assertEquals(days, 3.days)
+
+        days--
+        assertEquals(days, 2.days)
     }
 
     @Test
