@@ -13,7 +13,17 @@ interface TimeUnit {
 }
 
 
-class Interval<out T : TimeUnit>(val value: Double, val factory: () -> T) {
+class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) {
+
+    companion object {
+        inline operator fun <reified K : TimeUnit> invoke(value: Number) = Interval(value) {
+            K::class.java.newInstance()
+        }
+    }
+
+    val value = value.toDouble()
+
+    val longValue = Math.round(this.value)
 
     val inDays: Interval<Day>
         get() = converted()
@@ -36,17 +46,10 @@ class Interval<out T : TimeUnit>(val value: Double, val factory: () -> T) {
     val inNanoseconds: Interval<Nanosecond>
         get() = converted()
 
-    val longValue = Math.round(value)
 
     inline fun <reified OtherUnit : TimeUnit> converted(): Interval<OtherUnit> {
         val otherInstance = OtherUnit::class.java.newInstance()
         return Interval(value * factory().conversionRate(otherInstance))
-    }
-
-    companion object {
-        inline operator fun <reified K : TimeUnit> invoke(value: Double) = Interval(value) {
-            K::class.java.newInstance()
-        }
     }
 
     operator fun plus(other: Interval<TimeUnit>): Interval<T> {
@@ -116,25 +119,25 @@ class Nanosecond : TimeUnit {
 
 
 val Number.days: Interval<Day>
-    get() = Interval(this.toDouble())
+    get() = Interval(this)
 
 val Number.hours: Interval<Hour>
-    get() = Interval(this.toDouble())
+    get() = Interval(this)
 
 val Number.minutes: Interval<Minute>
-    get() = Interval(this.toDouble())
+    get() = Interval(this)
 
 val Number.seconds: Interval<Second>
-    get() = Interval(this.toDouble())
+    get() = Interval(this)
 
 val Number.milliseconds: Interval<Millisecond>
-    get() = Interval(this.toDouble())
+    get() = Interval(this)
 
 val Number.microseconds: Interval<Microsecond>
-    get() = Interval(this.toDouble())
+    get() = Interval(this)
 
 val Number.nanoseconds: Interval<Nanosecond>
-    get() = Interval(this.toDouble())
+    get() = Interval(this)
 
 
 
