@@ -22,7 +22,7 @@ val tenSeconds = 10.seconds
 val fiveMinutes = 5.minutes
 val twoHours = 2.hours
 val threeDays = 3.days
-val tenMinutesFromNow = Calender.getInstance() + 10.minutes
+val tenMinutesFromNow = Calendar.getInstance() + 10.minutes
 val tenSecondsInMilliseconds = 10.seconds.inMilliseconds
 ```
 
@@ -76,7 +76,7 @@ val doubled = duration * 2
 val seconds = 10.seconds + 3.minutes // Interval<Second>
 ```
 
-You can also use these operations on `Calender`:
+You can also use these operations on `Calendar`:
 
 ```kotlin
 val twoHoursLater = Calendar.getInstance() + 2.hours
