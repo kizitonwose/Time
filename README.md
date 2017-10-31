@@ -127,7 +127,7 @@ class Week : TimeUnit {
 }
 
 val Number.weeks: Interval<Week>
-    get() = Interval(this.toDouble())
+    get() = Interval(this)
 
 val Interval<TimeUnit>.inWeeks: Interval<Week>
     get() = converted()
@@ -232,7 +232,7 @@ Add the dependency to your `build.gradle`:
 
 ```groovy
 dependencies {
-    compile 'com.github.kizitonwose.time:time:1.0.0'
+    compile 'com.github.kizitonwose.time:time:1.0.1'
 }
 ```
 
@@ -240,7 +240,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    compile 'com.github.kizitonwose.time:time-android:1.0.0'
+    compile 'com.github.kizitonwose.time:time-android:1.0.1'
 }
 ```
 
