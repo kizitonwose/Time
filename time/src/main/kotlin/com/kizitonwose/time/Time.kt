@@ -23,6 +23,8 @@ class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) : Serializ
         }
     }
 
+    val unit: T = factory()
+
     val value = value.toDouble()
 
     val longValue = Math.round(this.value)
