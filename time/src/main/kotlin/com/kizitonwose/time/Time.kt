@@ -1,5 +1,7 @@
 package com.kizitonwose.time
 
+import java.io.Serializable
+
 /**
  * Created by Kizito Nwose on 14/10/2017
  */
@@ -13,7 +15,7 @@ interface TimeUnit {
 }
 
 
-class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) {
+class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) : Serializable {
 
     companion object {
         inline operator fun <reified K : TimeUnit> invoke(value: Number) = Interval(value) {
@@ -80,7 +82,7 @@ class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) {
     operator fun contains(other: Interval<TimeUnit>)
             = inMilliseconds.value >= other.inMilliseconds.value
 
-    override operator fun equals(other: Any?): Boolean {
+    override fun equals(other: Any?): Boolean {
         if (other == null || other !is Interval<TimeUnit>) return false
         return compareTo(other) == 0
     }
