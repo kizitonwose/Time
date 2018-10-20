@@ -72,9 +72,9 @@ class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) : Serializ
         return Interval(value / other.toDouble()) { factory() }
     }
 
-    operator fun inc() = Interval(value + 1, { factory() })
+    operator fun inc() = Interval(value + 1) { factory() }
 
-    operator fun dec() = Interval(value - 1, { factory() })
+    operator fun dec() = Interval(value - 1) { factory() }
 
     operator fun compareTo(other: Interval<TimeUnit>)
             = inMilliseconds.value.compareTo(other.inMilliseconds.value)
@@ -88,6 +88,10 @@ class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) : Serializ
     }
 
     override fun hashCode() = inMilliseconds.value.hashCode()
+
+    override fun toString(): String {
+        return "$value ${unit::class.java.simpleName}"
+    }
 }
 
 
