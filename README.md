@@ -76,7 +76,7 @@ val doubled = duration * 2
 val seconds = 10.seconds + 3.minutes // Interval<Second>
 ```
 
-You can also use these operations on `Calendar`:
+You can also use these operations with the `Calendar` class:
 
 ```kotlin
 val twoHoursLater = Calendar.getInstance() + 2.hours
