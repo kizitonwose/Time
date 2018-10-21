@@ -15,13 +15,15 @@ interface TimeUnit {
 }
 
 
-class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) : Serializable {
+class Interval<out T : TimeUnit>(value: Number, factory: () -> T) : Serializable {
 
     companion object {
         inline operator fun <reified K : TimeUnit> invoke(value: Number) = Interval(value) {
             K::class.java.newInstance()
         }
     }
+
+    val unit: T = factory()
 
     val value = value.toDouble()
 
@@ -51,36 +53,34 @@ class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) : Serializ
 
     inline fun <reified OtherUnit : TimeUnit> converted(): Interval<OtherUnit> {
         val otherInstance = OtherUnit::class.java.newInstance()
-        return Interval(value * factory().conversionRate(otherInstance))
+        return Interval(value * unit.conversionRate(otherInstance))
     }
 
     operator fun plus(other: Interval<TimeUnit>): Interval<T> {
-        val newValue = value + other.value * other.factory().conversionRate(factory())
-        return Interval(newValue) { factory() }
+        val newValue = value + other.value * other.unit.conversionRate(unit)
+        return Interval(newValue) { unit }
     }
 
     operator fun minus(other: Interval<TimeUnit>): Interval<T> {
-        val newValue = value - other.value * other.factory().conversionRate(factory())
-        return Interval(newValue) { factory() }
+        val newValue = value - other.value * other.unit.conversionRate(unit)
+        return Interval(newValue) { unit }
     }
 
     operator fun times(other: Number): Interval<T> {
-        return Interval(value * other.toDouble()) { factory() }
+        return Interval(value * other.toDouble()) { unit }
     }
 
     operator fun div(other: Number): Interval<T> {
-        return Interval(value / other.toDouble()) { factory() }
+        return Interval(value / other.toDouble()) { unit }
     }
 
-    operator fun inc() = Interval(value + 1, { factory() })
+    operator fun inc() = Interval(value + 1) { unit }
 
-    operator fun dec() = Interval(value - 1, { factory() })
+    operator fun dec() = Interval(value - 1) { unit }
 
-    operator fun compareTo(other: Interval<TimeUnit>)
-            = inMilliseconds.value.compareTo(other.inMilliseconds.value)
+    operator fun compareTo(other: Interval<TimeUnit>) = inMilliseconds.value.compareTo(other.inMilliseconds.value)
 
-    operator fun contains(other: Interval<TimeUnit>)
-            = inMilliseconds.value >= other.inMilliseconds.value
+    operator fun contains(other: Interval<TimeUnit>) = inMilliseconds.value >= other.inMilliseconds.value
 
     override fun equals(other: Any?): Boolean {
         if (other == null || other !is Interval<TimeUnit>) return false
@@ -88,6 +88,14 @@ class Interval<out T : TimeUnit>(value: Number, val factory: () -> T) : Serializ
     }
 
     override fun hashCode() = inMilliseconds.value.hashCode()
+
+    override fun toString(): String {
+        val unitString = unit::class.java.simpleName.toLowerCase()
+        val isWhole = value % 1 == 0.0
+        return (if (isWhole) longValue.toString() else value.toString())
+                .plus(" ")
+                .plus(if (value == 1.0) unitString else unitString.plus("s"))
+    }
 }
 
 
