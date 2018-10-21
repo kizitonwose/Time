@@ -78,11 +78,9 @@ class Interval<out T : TimeUnit>(value: Number, factory: () -> T) : Serializable
 
     operator fun dec() = Interval(value - 1) { unit }
 
-    operator fun compareTo(other: Interval<TimeUnit>)
-            = inMilliseconds.value.compareTo(other.inMilliseconds.value)
+    operator fun compareTo(other: Interval<TimeUnit>) = inMilliseconds.value.compareTo(other.inMilliseconds.value)
 
-    operator fun contains(other: Interval<TimeUnit>)
-            = inMilliseconds.value >= other.inMilliseconds.value
+    operator fun contains(other: Interval<TimeUnit>) = inMilliseconds.value >= other.inMilliseconds.value
 
     override fun equals(other: Any?): Boolean {
         if (other == null || other !is Interval<TimeUnit>) return false
@@ -92,7 +90,11 @@ class Interval<out T : TimeUnit>(value: Number, factory: () -> T) : Serializable
     override fun hashCode() = inMilliseconds.value.hashCode()
 
     override fun toString(): String {
-        return "$value ${unit::class.java.simpleName}"
+        val unitString = unit::class.java.simpleName.toLowerCase()
+        val isWhole = value % 1 == 0.0
+        return (if (isWhole) longValue.toString() else value.toString())
+                .plus(" ")
+                .plus(if (value == 1.0) unitString else unitString.plus("s"))
     }
 }
 
