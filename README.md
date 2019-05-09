@@ -238,7 +238,7 @@ Add the dependency to your `build.gradle`:
 
 ```groovy
 dependencies {
-    compile 'com.github.kizitonwose.time:time:1.0.2'
+    compile 'com.github.kizitonwose.time:time:<version>'
 }
 ```
 
@@ -246,7 +246,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    compile 'com.github.kizitonwose.time:time-android:1.0.2'
+    compile 'com.github.kizitonwose.time:time-android:<version>'
 }
 ```
 
