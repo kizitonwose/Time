@@ -9,16 +9,12 @@ import kotlin.concurrent.scheduleAtFixedRate
  */
 
 //region Calendar
-operator fun Calendar.plus(other: Interval<TimeUnit>): Calendar {
-    val newCalendar = clone() as Calendar
-    newCalendar.add(Calendar.MILLISECOND, other.inMilliseconds.longValue.toInt())
-    return newCalendar
+operator fun Calendar.plus(other: Interval<TimeUnit>): Calendar = (clone() as Calendar).apply {
+    timeInMillis += other.inMilliseconds.longValue
 }
 
-operator fun Calendar.minus(other: Interval<TimeUnit>): Calendar {
-    val newCalendar = clone() as Calendar
-    newCalendar.add(Calendar.MILLISECOND, -other.inMilliseconds.longValue.toInt())
-    return newCalendar
+operator fun Calendar.minus(other: Interval<TimeUnit>): Calendar = (clone() as Calendar).apply {
+    timeInMillis -= other.inMilliseconds.longValue
 }
 //endregion
 
