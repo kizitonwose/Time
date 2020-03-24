@@ -1,6 +1,8 @@
 package com.kizitonwose.time
 
 import java.io.Serializable
+import java.util.*
+import kotlin.math.roundToLong
 
 /**
  * Created by Kizito Nwose on 14/10/2017
@@ -27,7 +29,7 @@ class Interval<out T : TimeUnit>(value: Number, factory: () -> T) : Serializable
 
     val value = value.toDouble()
 
-    val longValue = Math.round(this.value)
+    val longValue = this.value.roundToLong()
 
     val inDays: Interval<Day>
         get() = converted()
@@ -90,7 +92,7 @@ class Interval<out T : TimeUnit>(value: Number, factory: () -> T) : Serializable
     override fun hashCode() = inMilliseconds.value.hashCode()
 
     override fun toString(): String {
-        val unitString = unit::class.java.simpleName.toLowerCase()
+        val unitString = unit::class.java.simpleName.toLowerCase(Locale.ENGLISH)
         val isWhole = value % 1 == 0.0
         return (if (isWhole) longValue.toString() else value.toString())
                 .plus(" ")

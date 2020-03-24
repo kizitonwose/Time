@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package com.kizitonwose.timeandroid
 
 import android.os.Handler
