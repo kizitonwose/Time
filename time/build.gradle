@@ -3,10 +3,7 @@ apply plugin: 'kotlin'
 group = 'com.github.kizitonwose'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // This is a false positive, documented at https://youtrack.jetbrains.com/issue/KT-23933
-    // noinspection DifferentStdlibGradleVersion
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     testImplementation 'junit:junit:4.12'
 }
 
