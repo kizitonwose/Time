@@ -1,15 +1,13 @@
 buildscript {
-    ext.kotlin_version = '1.2.60'
+    ext.kotlin_version = '1.5.10'
 
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:7.0.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
-        classpath 'com.palantir:jacoco-coverage:0.4.0'
     }
 }
 
@@ -19,5 +17,3 @@ allprojects {
         jcenter()
     }
 }
-
-apply plugin: 'com.palantir.jacoco-full-report'
