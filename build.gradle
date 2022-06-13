@@ -8,12 +8,73 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.28.3"
     }
 }
 
 allprojects {
+    apply plugin: "com.jfrog.artifactory"
+    apply plugin: "maven-publish"
     repositories {
         google()
         mavenCentral()
+    }
+}
+
+ext.versionName = { ->
+    def currentTag = 'git tag --points-at HEAD'.execute().in.text.toString().trim()
+    def currentBranch = 'git rev-parse --abbrev-ref HEAD'.execute().in.text.toString().trim()
+    def tagRegex = "[0-9.]*[0-9]"
+    if (!currentTag.isEmpty() && currentTag.matches(tagRegex)) {// is not empty and is in following format 8.0
+        return 'git describe --tags --abbrev=0'.execute().in.text.toString().trim()
+    } else {
+        return currentBranch + '-SNAPSHOT'
+    }
+}
+
+def libraryGroupId = 'com.meesho.android'
+def libraryVersion = versionName()
+
+project('time') {
+    artifactoryPublish.dependsOn('build')
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId = libraryGroupId
+                artifactId = 'time'
+                version = libraryVersion
+                // Tell maven to prepare the generated "*.jar" file for publishing
+                artifact("$buildDir/libs/time.jar")
+
+                pom.withXml {
+                    def dependencies = asNode().appendNode('dependencies')
+                    configurations.implementation.allDependencies.each {
+                        def dependency = dependencies.appendNode('dependency')
+                        dependency.appendNode('groupId', it.group)
+                        dependency.appendNode('artifactId', it.name)
+                        dependency.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+artifactory {
+    //The base Artifactory URL if not overridden by the publisher/resolver
+    contextUrl = "https://jfrog-android.meeshotest.in/artifactory"
+    publish {
+        repository {
+            repoKey = libraryVersion.endsWith('-SNAPSHOT') ? "meesho-android-snapshot" // project.properties["SNAPSHOT_REPO_NAME"] :
+                    : "meesho-android" //project.properties["RELEASE_REPO_NAME"]
+            username = project.properties["JFROG_ARTIFACTORY_USERNAME"]
+            password = project.properties["JFROG_ARTIFACTORY_KEY"]
+        }
+        defaults {
+            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
+            publications('mavenJava')
+            publishArtifacts = true
+            // Publish generated POM files to Artifactory (true by default)
+            publishPom = true
+        }
     }
 }
